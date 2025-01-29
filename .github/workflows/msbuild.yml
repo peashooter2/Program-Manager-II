@@ -25,6 +25,7 @@ jobs:
       matrix:
         BUILD_CONFIGURATION: [Release, Debug]
         BUILD_PLATFORM: [x64, x86]
+        REMOVE_BUILD_DIR_ARCH: [x64, Win32]
 
     runs-on: windows-latest
 
@@ -45,10 +46,7 @@ jobs:
       run: msbuild /m /p:Configuration=${{matrix.BUILD_CONFIGURATION}} /p:Platform=${{matrix.BUILD_PLATFORM}} ${{env.SOLUTION_FILE_PATH}}
 
     - name: remove build dir
-      run: cmd /c del /s /f /q bin\x64\${{matrix.BUILD_CONFIGURATION}}\ProgMgr
-    - name: remove build dir
-      if: BUILD_CONFIGURATION != 'x64'
-      run: cmd /c del /s /f /q bin\Win32\${{matrix.BUILD_CONFIGURATION}}\ProgMgr
+      run: cmd /c del /s /f /q bin\${{matrix.REMOVE_BUILD_DIR_ARCH}}\${{matrix.BUILD_CONFIGURATION}}\ProgMgr
     - name: Upload Artifacts
       uses: actions/upload-artifact@v4.3.1
       with:
